@@ -19,6 +19,7 @@ class ProductDashboard extends Component {
       error: "",
       user: {},
       productList: [],
+      search: "",
     };
   }
   componentDidMount() {
@@ -58,12 +59,12 @@ class ProductDashboard extends Component {
       quantity: this.state.quantity,
       image: this.state.image,
     });
-    
+
     this.props.dispatchAction(STORE_CONSTANT.STORE.PRODUCT.ADD_ITEM, addNew);
     this.toggleForm(false);
     this.setState({ productList: this.props.productList });
   };
-  
+
   // validate values.
   validValues = () => {
     const { name, price, quantity } = this.state;
@@ -88,6 +89,25 @@ class ProductDashboard extends Component {
     const { id, value } = event.target;
     this.setState({ [id]: value.trim() });
   };
+  searchProduct = async (event) => {
+    const { id, value } = event.target;
+    await this.setState({ [id]: value.trim() });
+    if (this.state.search && this.state.search.length) {
+      this.setState({ productList: this.props.productList });
+      let productList = this.state.productList;
+      productList = productList.filter((item) => {
+        if (
+          item.name.toLowerCase().includes(this.state.search.toLowerCase()) ||
+          item.price.toLowerCase().includes(this.state.search.toLowerCase()) ||
+          item.quantity.toLowerCase().includes(this.state.search.toLowerCase())
+        )
+          return true;
+      });
+      this.setState({ productList: productList });
+    } else {
+      this.setState({ productList: this.props.productList });
+    }
+  };
   render() {
     return (
       <ProductComponent
@@ -98,6 +118,7 @@ class ProductDashboard extends Component {
         productList={this.props.productList}
         fillValues={this.fillValues}
         logout={this.logout}
+        searchProduct={this.searchProduct}
       />
     );
   }

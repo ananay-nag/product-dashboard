@@ -58,7 +58,7 @@ class Login extends Component {
   //set user data to state
   setUser = (event) => {
     const { id, value } = event.target;
-    if (value.trim().length) this.setState({ [id]: value.trim() });
+    this.setState({ [id]: value.trim() });
   };
   render() {
     // console.log(this.props);

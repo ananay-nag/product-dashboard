@@ -13,10 +13,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Input from "@material-ui/core/Input";
 
 const DefaltItem = () => {
   return (
-    <div className="width-100-p display-flex m-t-5" style={{ background: "rgba(255,255,255,0.5)" }}>
+    <div className="width-50-p display-flex m-t-5" style={{ background: "rgba(255,255,255,0.5)" }}>
       <div className="m-5 width-100-p txt-align-center">
         <span className="c-ffffff m-5 txt-align-center">No more product</span>
       </div>
@@ -25,11 +26,20 @@ const DefaltItem = () => {
 };
 const ProductComponent = (props) => {
   // console.log(props);
-  const { toggleForm, state, logout } = props;
+  const { toggleForm, state, logout, searchProduct } = props;
   return (
     <div className="width-100-p m-20" style={{ background: "rgba(255,255,255,0.2)" }}>
       <div className="m-5 display-flex jc-space-around width-100-p c-FFFFFF fw-600 fs-20">
-        <div className="width-75-p txt-align-center">Product Dashboard</div>
+        <div className="width-65-p txt-align-center">Product Dashboard</div>
+        <div className="cr-pointer">
+          <Input
+            value={state.search ? state.search : ""}
+            inputProps={{ "aria-label": "search" }}
+            id="search"
+            placeholder="search"
+            onChange={(e) => searchProduct(e)}
+          />
+        </div>
         <div onClick={() => toggleForm(!state.isAdd)} className="cr-pointer">
           Add Product
         </div>
@@ -68,15 +78,11 @@ const useStyles = makeStyles({
   },
 });
 const ShowProduct = (props) => {
-  console.log("--------------", props);
   // props = props.props;
   const { item } = props;
-  function defaultImage(img) {
-    // img.src = "default.gif";
-  }
   const classes = useStyles();
   return (
-    <Card className={classes.root + " m-20"} style={{ minWidth: 300 }}>
+    <Card className={classes.root + " m-20"} style={{ minWidth: 300 }} key={item.name}>
       <CardActionArea>
         <CardMedia className={classes.media} image={item.image} title="Contemplative Reptile" />
         <CardContent>
@@ -90,10 +96,10 @@ const ShowProduct = (props) => {
       </CardActionArea>
       <CardActions>
         <Button size="small" color="primary">
-          {item.price}
+          Price {item.price}
         </Button>
         <Button size="small" color="primary">
-          {item.quantity}
+          Qt {item.quantity}
         </Button>
       </CardActions>
     </Card>
@@ -107,11 +113,17 @@ const AppProdcut = (props) => {
       <DialogContent>
         <DialogContentText id="product-des">Enter Product Description</DialogContentText>
         <div className="m-t-50 display-flex jc-space-around width-100-p" style={{ flexFlow: "wrap" }}>
-          <TextField id="name" label="Name" variant="outlined" required onChange={(e) => fillValues(e)} />
-          <TextField id="description" label="Description" variant="outlined" onChange={(e) => fillValues(e)} />
-          <TextField id="price" label="Price" variant="outlined" required onChange={(e) => fillValues(e)} />
-          <TextField id="quantity" label="Quantity" variant="outlined" required onChange={(e) => fillValues(e)} />
-          <TextField id="image" label="Image Url" variant="outlined" onChange={(e) => fillValues(e)} />
+          <TextField id="name" label="Name" variant="outlined" value={state.name ? state.name : ""} onChange={(e) => fillValues(e)} />
+          <TextField
+            id="description"
+            label="Description"
+            variant="outlined"
+            value={state.description ? state.description : ""}
+            onChange={(e) => fillValues(e)}
+          />
+          <TextField id="price" label="Price" variant="outlined" value={state.price ? state.price : 0} onChange={(e) => fillValues(e)} />
+          <TextField id="quantity" label="Quantity" variant="outlined" value={state.quantity ? state.quantity : 0} onChange={(e) => fillValues(e)} />
+          <TextField id="image" label="Image Url" variant="outlined" value={state.image ? state.image : ""} onChange={(e) => fillValues(e)} />
         </div>
         {state.error ? (
           <div className="m-t-50 display-flex jc-space-around width-100-p c-FF0000" style={{ flexFlow: "wrap" }}>
